@@ -1,0 +1,170 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "My Music Video";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Synthwave Vibes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(270deg, #ff0080, #7928ca, #2afadf);
+            background-size: 600% 600%;
+            animation: gradientShift 15s ease infinite;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        @@keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #0ff;
+            text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+            margin-bottom: 20px;
+            animation: glowPulse 2s infinite alternate;
+        }
+
+        @@keyframes glowPulse {
+            0% {
+                text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+            }
+
+            100% {
+                text-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
+            }
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .video-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+            .video-card:hover {
+                transform: scale(1.05);
+            }
+
+        iframe {
+            border-radius: 10px;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.7);
+            z-index: 2;
+        }
+
+        /* Canvas as background layer */
+        #starCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Canvas for animated stars -->
+    <canvas id="starCanvas"></canvas>
+
+    <div class="content">
+        <h1>Synthwave Vibes 🔊</h1>
+        <div class="video-card">
+            <iframe width="914" height="514" src="https://www.youtube.com/embed/hBJk0Tq3JDU" title="Best of House Music - Vol. 1 (1 Hour Mix) [Monstercat Release]" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+
+    <script>
+        // Animate glowing particles in the background canvas
+        const canvas = document.getElementById('starCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let w, h;
+        function resizeCanvas() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const stars = [];
+        const numStars = 100;
+
+        for (let i = 0; i < numStars; i++) {
+            stars.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                radius: Math.random() * 2 + 1,
+                speed: Math.random() * 0.5 + 0.2
+            });
+        }
+
+        function animateStars() {
+            ctx.clearRect(0, 0, w, h);
+            for (let star of stars) {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 255, 255, 0.8)';
+                ctx.shadowColor = '#0ff';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+
+                // Move star downward
+                star.y += star.speed;
+                if (star.y > h) {
+                    star.y = 0;
+                    star.x = Math.random() * w;
+                }
+            }
+            requestAnimationFrame(animateStars);
+        }
+
+        animateStars();
+    </script>
+
+</body>
+</html>
